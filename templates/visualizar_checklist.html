@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Detalhes do Checklist{% endblock %}
+{% block content %}
+<div class="container">
+  <h2 class="mb-4">Detalhes do Checklist</h2>
+
+  <!-- Informações Gerais -->
+  <div class="card mb-4">
+    <div class="card-header">
+      Informações Gerais
+    </div>
+    <div class="card-body">
+      <p><strong>Título:</strong> {{ checklist.titulo }}</p>
+      <p><strong>Nome do Checklist:</strong> {{ checklist.nome_checklist }}</p>
+      <p><strong>Responsável:</strong> {{ checklist.responsavel }}</p>
+      <p><strong>Data da Inspeção:</strong> {{ checklist.data_inspecao.strftime('%d/%m/%Y') if checklist.data_inspecao else checklist.data_criacao.strftime('%d/%m/%Y') }}</p>
+      <p><strong>Hora:</strong> {{ checklist.hora_inspecao }}</p>
+      <p><strong>Observações Gerais:</strong> {{ checklist.observacoes or 'Nenhuma observação' }}</p>
+      <p><strong>Tipo de Inspeção:</strong> {{ dados.tipo }}</p>
+    </div>
+  </div>
+
+  <!-- Subitens de Inspeção -->
+  <div class="card">
+    <div class="card-header">
+      Subitens de Inspeção
+    </div>
+    <div class="card-body">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Subitem</th>
+            <th>Status</th>
+            <th>Observação</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for subitem in dados.subitens %}
+          <tr>
+            <td>{{ subitem.sub_item }}</td>
+            <td>{{ subitem.status }}</td>
+            <td>{{ subitem.observacao }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <a href="{{ url_for('dashboard') }}" class="btn btn-secondary mt-3">Voltar</a>
+</div>
+{% endblock %}

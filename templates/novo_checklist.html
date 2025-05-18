@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}Novo Checklist{% endblock %}
+
+{% block content %}
+  <h1 class="mb-4">Novo Checklist</h1>
+
+  <form method="POST">
+    <div class="mb-3">
+      <label for="titulo" class="form-label">Título</label>
+      <input type="text" class="form-control" name="titulo" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="nome_checklist" class="form-label">Nome do Checklist</label>
+      <input type="text" class="form-control" name="nome_checklist" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="responsavel" class="form-label">Responsável</label>
+      <input type="text" class="form-control" name="responsavel" required value="{{ current_user.username }}">
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="data_inspecao" class="form-label">Data da Inspeção</label>
+        <input type="date" class="form-control" name="data_inspecao" required>
+      </div>
+      <div class="col-md-6">
+        <label for="hora_inspecao" class="form-label">Hora da Inspeção</label>
+        <input type="time" class="form-control" name="hora_inspecao">
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="tipo_inspecao" class="form-label">Tipo de Inspeção</label>
+      <select class="form-select" id="tipo_inspecao" name="tipo_inspecao" required onchange="carregarSubitens()">
+        <option value="" selected disabled>Selecione um tipo</option>
+        {% for tipo in tipos %}
+          <option value="{{ tipo.id }}">{{ tipo.nome }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div id="tabela-subitens" style="display: none;" class="card mb-4">
+      <div class="card-header">
+        Itens da Inspeção
+      </div>
+      <div class="card-body">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Subitem</th>
+              <th>Status</th>
+              <th>Observação</th>
+            </tr>
+          </thead>
+          <tbody id="subitens-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <input type="hidden" name="sub_count" id="sub_count" value="0">
+
+    <div class="mb-3">
+      <label for="observacoes" class="form-label">Observações Gerais</label>
+      <textarea class="form-control" name="observacoes" rows="3"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Salvar Checklist</button>
+  </form>
+
+  <script>
+    const tiposSubitens = {{ tipos_subitens | tojson }};
+    const tipoSelect = document.getElementById('tipo_inspecao');
+    const subCountInput = document.getElementById('sub_count');
+    const subBody = document.getElementById('subitens-body');
+    const tabela = document.getElementById('tabela-subitens');
+
+    function carregarSubitens() {
+      const tipoId = tipoSelect.value;
+      subBody.innerHTML = '';
+      const subitens = tiposSubitens[tipoId];
+      if (!subitens || subitens.length === 0) {
+        tabela.style.display = 'none';
+        subCountInput.value = 0;
+        return;
+      }
+      subitens.forEach((descricao, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>
+            ${descricao}
+            <input type="hidden" name="sub_item_${index}" value="${descricao}">
+          </td>
+          <td>
+            <select class="form-select" name="status_${index}">
+              <option value="Ok">Ok</option>
+              <option value="Não Ok">Não Ok</option>
+              <option value="Não verificado" selected>Não verificado</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" class="form-control" name="obs_${index}" placeholder="Observação">
+          </td>
+        `;
+        subBody.appendChild(row);
+      });
+      subCountInput.value = subitens.length;
+      tabela.style.display = 'block';
+    }
+  </script>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Gerenciar Subitens{% endblock %}
+{% block content %}
+    <h1>Gerenciar Subitens</h1>
+    <form method="POST">
+        <select name="tipo_id">
+            {% for tipo in tipos %}
+                <option value="{{ tipo.id }}">{{ tipo.nome }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" name="descricao" placeholder="Descrição do Subitem">
+        <button type="submit">Adicionar</button>
+    </form>
+    <ul>
+        {% for subitem in subitens %}
+            <li>{{ subitem.descricao }} - {{ subitem.tipo.nome }}
+                <a href="{{ url_for('deletar_subitem', id=subitem.id) }}">Excluir</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

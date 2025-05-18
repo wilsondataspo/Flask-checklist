@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+  <h2>Dashboard</h2>
+  <a href="{{ url_for('novo_checklist') }}" class="btn btn-success mb-3">Novo Checklist</a>
+  {% if checklists %}
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Título</th>
+          <th>Nome do Checklist</th>
+          <th>Data de Criação</th>
+          <th>Responsável</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for checklist in checklists %}
+          <tr>
+            <td>{{ checklist.id }}</td>
+            <td>{{ checklist.titulo }}</td>
+            <td>{{ checklist.nome_checklist }}</td>
+            <td>{{ checklist.data_criacao.strftime('%d/%m/%Y') }}</td>
+            <td>{{ checklist.responsavel }}</td>
+            <td>
+              <a href="{{ url_for('visualizar_checklist', checklist_id=checklist.id) }}" class="btn btn-info btn-sm">Ver</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Nenhum checklist encontrado.</p>
+  {% endif %}
+{% endblock %}
