@@ -1,14 +1,35 @@
 {% extends 'base.html' %}
 {% block title %}Gerenciar Tipos de Inspeção{% endblock %}
 {% block content %}
-    <h1>Gerenciar Tipos de Inspeção</h1>
-    <form method="POST">
-        <input type="text" name="nome" placeholder="Nome do Tipo">
-        <button type="submit">Adicionar</button>
-    </form>
-    <ul>
-        {% for tipo in tipos %}
-            <li>{{ tipo.nome }} <a href="{{ url_for('deletar_tipo', id=tipo.id) }}">Excluir</a></li>
-        {% endfor %}
-    </ul>
+<div class="container mt-4">
+  <h1 class="mb-3">Gerenciar Tipos de Inspeção</h1>
+  <form method="POST" class="row g-3 mb-4">
+    <div class="col-auto">
+      <input type="text" class="form-control" name="nome" placeholder="Nome do Tipo" required>
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-success">Adicionar</button>
+    </div>
+  </form>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Nome</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tipo in tipos %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ tipo.nome }}</td>
+          <td>
+            <a href="{{ url_for('deletar_tipo', id=tipo.id) }}" class="btn btn-sm btn-danger">Excluir</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}

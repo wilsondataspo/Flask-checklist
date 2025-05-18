@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Gerenciar Tipos de Inspeção{% endblock %}
+{% block content %}
+    <h1>Gerenciar Tipos de Inspeção</h1>
+    <form method="POST">
+        <input type="text" name="nome" placeholder="Nome do Tipo">
+        <button type="submit">Adicionar</button>
+    </form>
+    <ul>
+        {% for tipo in tipos %}
+            <li>{{ tipo.nome }} <a href="{{ url_for('deletar_tipo', id=tipo.id) }}">Excluir</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

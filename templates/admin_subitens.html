@@ -1,21 +1,46 @@
 {% extends 'base.html' %}
 {% block title %}Gerenciar Subitens{% endblock %}
 {% block content %}
-    <h1>Gerenciar Subitens</h1>
-    <form method="POST">
-        <select name="tipo_id">
-            {% for tipo in tipos %}
-                <option value="{{ tipo.id }}">{{ tipo.nome }}</option>
-            {% endfor %}
-        </select>
-        <input type="text" name="descricao" placeholder="Descrição do Subitem">
-        <button type="submit">Adicionar</button>
-    </form>
-    <ul>
-        {% for subitem in subitens %}
-            <li>{{ subitem.descricao }} - {{ subitem.tipo.nome }}
-                <a href="{{ url_for('deletar_subitem', id=subitem.id) }}">Excluir</a>
-            </li>
+<div class="container mt-4">
+  <h1 class="mb-3">Gerenciar Subitens</h1>
+  <form method="POST" class="row g-3 mb-4">
+    <div class="col-md-4">
+      <select class="form-select" name="tipo_id" required>
+        <option value="" disabled selected>Selecione o Tipo</option>
+        {% for tipo in tipos %}
+          <option value="{{ tipo.id }}">{{ tipo.nome }}</option>
         {% endfor %}
-    </ul>
+      </select>
+    </div>
+    <div class="col-md-5">
+      <input type="text" class="form-control" name="descricao" placeholder="Descrição do Subitem" required>
+    </div>
+    <div class="col-md-3">
+      <button type="submit" class="btn btn-success w-100">Adicionar</button>
+    </div>
+  </form>
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Descrição</th>
+        <th>Tipo</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for subitem in subitens %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ subitem.descricao }}</td>
+          <td>{{ subitem.tipo.nome }}</td>
+          <td>
+            <a href="{{ url_for('deletar_subitem', id=subitem.id) }}" class="btn btn-sm btn-danger">Excluir</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}
